@@ -5,6 +5,7 @@ A pedagogical traffic-light controller for the STM32 Nucleo‑F767ZI using the S
 Two variants are included:
 - `part1.c`: Basic timed cycle (no button)
 - `Src/main.c`: Part 2 – adds a pedestrian push‑button with EXTI and debouncing
+- `maintemplate.c`: The original STM32CubeMX template (baseline project scaffold)
 
 
 ## Hardware at a glance
@@ -81,6 +82,36 @@ Timing backbone:
 Debug aid:
 - The on‑board LED LD2 turns ON while the system is in the pedestrian overlap (GREEN+YELLOW) to visualize that special window.
 - Optional boot‑time LED probe (`LED_BOOT_PROBE_MS`) briefly cycles R→Y→G to verify wiring and polarity.
+
+## Assignment mapping and acceptance criteria
+
+This repository matches the ELE201 assignment parts as follows.
+
+Part 1 (file: `part1.c`)
+- a) On startup, only RED is ON.
+- b) RED stays ON for 20 seconds.
+- c) Then RED+YELLOW stays ON for 5 seconds.
+- d) Finally, only GREEN stays ON for 10 seconds.
+- e) Repeat forever.
+
+How it’s implemented: a timer‑driven FSM in the TIM3 interrupt switches states based on 100 ms tick counters. LEDs are driven via `set_lights(r,y,g)`.
+
+Part 2 (file: `Src/main.c`)
+- a) A push button acts as a pedestrian request on PD3 (EXTI3).
+  - i) If GREEN is ON when pressed: immediately enter GREEN+YELLOW for 5 seconds, then go to RED.
+  - ii) If RED is ON when pressed: extend the current RED by +10 seconds (once per red cycle).
+
+How it’s implemented: the EXTI callback latches requests and applies debounce; the TIM3 ISR executes the FSM and serves the request, ensuring the exact 5 s overlap window using millisecond timing.
+
+State diagram (Part 2):
+
+RED --20s--> RED+YEL --5s--> GREEN --10s--> RED
+  ^                               |
+  |                               | (button during GREEN)
+  |                    GREEN+YEL (5s)
+  +-------------------------------+
+
+Button during RED: extend RED by +10 s (one time per red cycle).
 
 
 ## Code walkthrough
@@ -175,6 +206,10 @@ This keeps the ISR tiny: just set flags and let the timer ISR run the FSM.
 - `part1.c` – Part 1 (no button) reference
 - `Inc/main.h` – Pins and peripheral handles
 - `platformio.ini` – PlatformIO configuration
+
+To try Part 1 instead of Part 2
+- Option A (quick view): Open `part1.c` to read and compare the simpler FSM.
+- Option B (build it): Replace `Src/main.c` with the content from `part1.c` (or rename files accordingly) and build/upload. The PlatformIO `src_dir` is `Src`, so whatever is compiled as `main.c` there becomes the firmware entry point.
 
 The rest of the files are STM32Cube/HAL sources generated or provided for the MCU and board support.
 
