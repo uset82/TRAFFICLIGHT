@@ -1,0 +1,376 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build (PlatformIO)",
+			"type": "shell",
+			"command": "pio",
+			"args": [
+				"run"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build (PlatformIO)",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload (PlatformIO)",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"-t",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build (PlatformIO)",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build (PlatformIO)",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"-t",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build (PlatformIO)",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"-t",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build and Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe"
+		},
+		{
+			"label": "Build STM32 Traffic Light",
+			"type": "shell",
+			"command": "platformio",
+			"args": [
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Clean",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"clean"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "PlatformIO: Build & Upload",
+			"type": "shell",
+			"command": "C:\\Users\\carlo\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--target",
+				"upload"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
