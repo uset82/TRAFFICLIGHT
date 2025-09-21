@@ -1,4 +1,4 @@
-ELE201 – Traffic Light (Part 2)
+ELE201 – Traffic Light 
 
 [![CI](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml/badge.svg)](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml)
 
@@ -13,6 +13,35 @@ Hardware
   - PB10 → GREEN
 - Pedestrian button:
   - PD3 (EXTI3), button to 3V3, pulldown to GND (external 10 kΩ or internal pulldown enabled in code)
+
+## Part 1 – Traffic Light (no button)
+
+- **Behavior**:
+  - On start: only RED is on
+  - Sequence: RED 20 s → RED + YELLOW 5 s → GREEN 10 s → repeat indefinitely
+- **Wiring**:
+  - LEDs use PB8 (RED), PB9 (YELLOW), PB10 (GREEN); active‑high. Use series resistors to 3V3; LED cathodes to GND. Matches Figure‑1 in the assignment.
+  - The PD3 button is configured in code but unused in Part 1.
+- **Implementation (file `part1.c`)**:
+  - Finite state machine with states: `ST_RED`, `ST_RED_YEL`, `ST_GREEN`.
+  - Time base: `TIM3` generates an interrupt every 100 ms (10 Hz). With a 96 MHz timer clock, prescaler = 959 and period = 9999 yield 100 ms per update.
+  - Tick counter: `g_tick100ms` increments in `HAL_TIM_PeriodElapsedCallback`. `enter_state(...)` switches LEDs via `set_lights(...)` and resets the counter.
+  - LED control: `set_lights(red, yellow, green)` writes PB8/PB9/PB10 through HAL GPIO.
+- **Durations and mapping to the assignment**:
+  - `T_RED_TICKS = 200` → 200 × 0.1 s = 20 s (RED)
+  - `T_REDY_TICKS = 50` → 50 × 0.1 s = 5 s (RED + YELLOW)
+  - `T_GRN_TICKS = 100` → 100 × 0.1 s = 10 s (GREEN)
+- **Where to look in the code**:
+  - Pin defines and durations: top of `part1.c`
+  - State entry and LED setting: `enter_state`
+  - Timer ISR with transitions: `HAL_TIM_PeriodElapsedCallback` (checks `TIM3` and advances the FSM)
+  - GPIO setup for PB8/PB9/PB10: `MX_GPIO_Init`
+
+
+  -----------------------------------------------------------------------------------------------------
+
+## Part 2 – Traffic Light  
+
 
 Functional Requirements (Part 2)
 - Normal cycle repeats:

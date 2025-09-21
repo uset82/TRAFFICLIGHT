@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -27,13 +26,22 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// --- Semáforo: estados ---
+// Overview (Part 1): Timer-driven finite state machine for a 3-LED traffic light.
+// - Time base: TIM3 interrupt every 100 ms (10 Hz). A tick counter increments in the ISR.
+// - States and durations: RED (20 s) → RED+YELLOW (5 s) → GREEN (10 s) → repeat.
+// - Mapping to the assignment:
+//   a) On start, only LED_RED is on.
+//   b) LED_RED stays on for 20 seconds.
+//   c) Then LED_RED and LED_YELLOW stay on for 5 seconds.
+//   d) Finally, only LED_GREEN is on for 10 seconds.
+//   e) The process repeats infinitely.
+// Traffic light: states
 typedef enum { ST_RED = 0, ST_RED_YEL, ST_GREEN } tl_state_t;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-// === Mapeo pedido ===
+// === Pin mapping (external LEDs and button) ===
 #define LED_RED_Port    GPIOB
 #define LED_RED_Pin     GPIO_PIN_8
 #define LED_YEL_Port    GPIOB
@@ -41,9 +49,9 @@ typedef enum { ST_RED = 0, ST_RED_YEL, ST_GREEN } tl_state_t;
 #define LED_GRN_Port    GPIOB
 #define LED_GRN_Pin     GPIO_PIN_10
 #define BTN_Port        GPIOD
-#define BTN_Pin         GPIO_PIN_3   // EXTI3 (no usado en PART 1)
+#define BTN_Pin         GPIO_PIN_3   // EXTI3 (not used in PART 1)
 
-// Duraciones en ticks de 100 ms
+// Durations in 100 ms ticks (TIM3 ISR period)
 #define T_RED_TICKS     200   // 20 s
 #define T_REDY_TICKS     50   // 5 s
 #define T_GRN_TICKS     100   // 10 s
@@ -83,9 +91,9 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
-// Variables del semáforo
+// Traffic light runtime variables
 static volatile tl_state_t g_state = ST_RED;
-static volatile uint32_t   g_tick100ms = 0;   // incrementa cada interrupción (100 ms)
+static volatile uint32_t   g_tick100ms = 0;   // increments on each interrupt (100 ms)
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,6 +111,8 @@ static void enter_state(tl_state_t s);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// LED control helpers
+// set_lights(...): drive PB8/PB9/PB10 active-high; true = ON, false = OFF.
 static inline void set_lights(bool r, bool y, bool g)
 {
   HAL_GPIO_WritePin(LED_RED_Port, LED_RED_Pin, r ? GPIO_PIN_SET : GPIO_PIN_RESET);
@@ -110,6 +120,7 @@ static inline void set_lights(bool r, bool y, bool g)
   HAL_GPIO_WritePin(LED_GRN_Port, LED_GRN_Pin, g ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
+// enter_state(...): update current state, reset tick counter, and set LEDs for that state.
 static void enter_state(tl_state_t s)
 {
   g_state = s;
@@ -154,14 +165,14 @@ int main(void)
   MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
-  // Estado inicial: solo ROJO
+// Initial state: only RED on
   enter_state(ST_RED);
 
-  // Habilita NVIC para TIM3 (por si CubeMX no lo añadió)
+// Enable NVIC for TIM3 (in case CubeMX did not add it)
   HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
-  // Arranca TIM3 con interrupción (100 ms)
+// Start TIM3 with interrupt (100 ms period)
   HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
@@ -172,7 +183,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // Nada aquí: todo lo maneja el timer-interrupt
+    // Nothing here: the timer interrupt runs the state machine
   }
   /* USER CODE END 3 */
 }
@@ -221,7 +232,7 @@ void SystemClock_Config(void)
   */
 static void MX_ETH_Init(void)
 {
-  /* ... (sin cambios) ... */
+  /* ... (unchanged) ... */
    static uint8_t MACAddr[6];
 
   heth.Instance = ETH;
@@ -233,8 +244,6 @@ static void MX_ETH_Init(void)
   heth.Init.RxBuffLen = 1524;
 
   if (HAL_ETH_Init(&heth) != HAL_OK) { Error_Handler(); }
-
-  memset(&TxConfig, 0 , sizeof(ETH_TxPacketConfig));
   TxConfig.Attributes   = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
   TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
   TxConfig.CRCPadCtrl   = ETH_CRC_PAD_INSERT;
@@ -274,6 +283,7 @@ static void MX_TIM3_Init(void)
   TIM_ClockConfigTypeDef  sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig      = {0};
 
+  // Update event: f_update = 96 MHz / ((959+1) * (9999+1)) = 10 Hz → 100 ms
   htim3.Instance = TIM3;
   htim3.Init.Prescaler         = 959;   // 96 MHz / (959+1) = 100 kHz
   htim3.Init.CounterMode       = TIM_COUNTERMODE_UP;
@@ -346,19 +356,19 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
-  // Pone PB8/PB9/PB10 bajos de inicio (LEDs apagados)
+  // Set PB8/PB9/PB10 low at startup (LEDs off)
   HAL_GPIO_WritePin(GPIOB, LED_RED_Pin|LED_YEL_Pin|LED_GRN_Pin, GPIO_PIN_RESET);
 
-  // Otros pines de placa generados por Cube
+  // Other board pins generated by Cube
   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
 
-  // Botón USER de la Nucleo (sin cambios)
+  // Nucleo USER button (unchanged)
   GPIO_InitStruct.Pin  = USER_Btn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
-  // === LEDs externos: PB8 / PB9 / PB10 salidas ===
+  // === External LEDs: PB8 / PB9 / PB10 outputs ===
   GPIO_InitStruct.Pin   = LED_RED_Pin|LED_YEL_Pin|LED_GRN_Pin;
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull  = GPIO_NOPULL;
@@ -378,10 +388,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_OverCurrent_GPIO_Port, &GPIO_InitStruct);
 
-  // === Botón PD3 como EXTI Rising con Pull-Down (preparado para PART 2) ===
+  // === Button PD3 as EXTI Rising with Pull-Down (prepared for PART 2) ===
   GPIO_InitStruct.Pin  = BTN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;   // <- importante: pull-down externo o interno
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;   // <- important: external or internal pull-down
   HAL_GPIO_Init(BTN_Port, &GPIO_InitStruct);
 
   // EXTI NVIC
@@ -393,7 +403,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-// ISR de TIM3 cada 100 ms: máquina de estados del semáforo
+// TIM3 ISR every 100 ms: traffic light state machine
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM3)
@@ -423,11 +433,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 }
 
-// (Opcional) Callback del botón PD3 — no se usa en PART 1
+// (Optional) PD3 button callback — not used in PART 1
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == BTN_Pin) {
-    // Se implementará en PART 2
+    // Will be implemented in PART 2
   }
 }
 /* USER CODE END 4 */
@@ -440,7 +450,7 @@ void Error_Handler(void)
 {
   __disable_irq();
   while (1) {
-    // Blink rápido rojo para indicar error
+    // Fast red blink to indicate error
     HAL_GPIO_TogglePin(LED_RED_Port, LED_RED_Pin);
     HAL_Delay(100);
   }
