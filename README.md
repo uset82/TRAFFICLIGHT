@@ -1,5 +1,7 @@
 ELE201 – Traffic Light (Part 2)
 
+[![CI](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml/badge.svg)](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml)
+
 Overview
 This project implements the microcontroller part of ELE201 – Assignment 2 on an STM32F767ZI (Nucleo‑F767ZI) using STM32Cube HAL. It fulfills the Part 2 requirements without using HAL_Delay by combining a timer interrupt (TIM3) and an external interrupt (EXTI) for a push button.
 
@@ -48,7 +50,7 @@ Notes / Tips
 - If external LEDs behave inverted, check wiring polarity; code assumes active‑high: driving PB8/PB9/PB10 high turns LEDs on.
 - If button has no external pulldown, the code enables internal pulldown to keep PD3 stable when unpressed.
 
-Pedagogical Outline (How it works)
+How it works
 1) TIM3 generates an interrupt every 1 ms. A state‑local counter (elapsed_ms) increments inside the ISR.
 2) The FSM compares elapsed_ms with target_ms to decide when to transition.
 3) When the button EXTI fires during GREEN, we only set a flag; the TIM3 ISR sees the flag and immediately transitions to the pedestrian state (GREEN+YELLOW) and holds it for 5 s.
