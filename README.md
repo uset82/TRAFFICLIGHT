@@ -1,6 +1,8 @@
 ELE201 – Traffic Light 
 
-[![CI](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml/badge.svg)](https://github.com/uset82/TRAFFICLIGHT/actions/workflows/ci.yml)
+
+
+https://www.tiktok.com/@carloscarpio82/video/7552542509784714518?is_from_webapp=1&sender_device=pc&web_id=7490154445721781782
 
 Overview
 This project implements the microcontroller part of ELE201 – Assignment 2 on an STM32F767ZI (Nucleo‑F767ZI) using STM32Cube HAL. It fulfills the Part 2 requirements without using HAL_Delay by combining a timer interrupt (TIM3) and an external interrupt (EXTI) for a push button.
